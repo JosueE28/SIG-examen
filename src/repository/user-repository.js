@@ -64,10 +64,9 @@ const ChatMessage = Schema('ChatMessage', {
 
 export class chatRepository {
     static async saveMessage({ username, message }) {
-        // Creamos el nuevo mensaje en la base de datos
         const msg = ChatMessage.create({
             _id: crypto.randomUUID(),
-            username, // Aquí estamos guardando el username con el mensaje
+            username, 
             message,
             timestamp: new Date(),
         }).save();
@@ -76,7 +75,6 @@ export class chatRepository {
     }
 
     static async getMessages() {
-        // Obtenemos todos los mensajes y los ordenamos por timestamp
         const messages = await ChatMessage.find();
         return messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
     }
