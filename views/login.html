@@ -22,12 +22,11 @@
 
 <script>
     document.getElementById('loginForm').addEventListener('submit', async function(event) {
-        event.preventDefault();  // Prevenir el envío tradicional del formulario
+        event.preventDefault();  o
 
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
-        // Enviar los datos al servidor
         try {
             const response = await fetch('/login', {
                 method: 'POST',
@@ -39,7 +38,6 @@
 
             const data = await response.json();
             
-            // Si la respuesta es exitosa, almacenamos el username
             if (data.user) {
                 localStorage.setItem('username', data.user.username);
                 window.location.href = '/chat'; 

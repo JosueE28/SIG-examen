@@ -30,13 +30,12 @@
 
     <script>
         document.getElementById('registerForm').addEventListener('submit', async function(event) {
-            event.preventDefault();  // Prevenir el envío tradicional del formulario
+            event.preventDefault();  
 
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const select = document.getElementById('select').value;
 
-            // Enviar los datos al servidor
             try {
                 const response = await fetch('/register', {
                     method: 'POST',
@@ -48,9 +47,8 @@
 
                 const data = await response.json();
                 
-                // Si el registro fue exitoso, redirigir al login
                 if (data.id) {
-                    window.location.href = '/login';  // Redirigir a la página de login
+                    window.location.href = '/login';  
                 } else {
                     alert('Registro fallido');
                 }
