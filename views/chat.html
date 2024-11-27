@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHAT</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <script type="module">
+        import { io } from 'https://cdn.jsdelivr.net/npm/socket.io-client@4.8.1/dist/socket.io.esm.min.js';
+        const socket = io();
+
+        const form = document.getElementById('form');
+        const input = document.getElementById('chat-input');
+        const messages = document.getElementById('messa');
+
+        const scrollToBottom = () => {
+            messages.scrollTop = messages.scrollHeight;
+        };
+
+        socket.on('connect', () => {
+            const username = localStorage.getItem('username');
+            socket.emit('set username', username);
+        });
+
+        socket.on('chat history', (history) => {
+            messages.innerHTML = '';
+            history.reverse().forEach((msg) => {
+                const item = `<li><strong>${msg.username}:</strong> ${msg.message}</li>`;
+                messages.insertAdjacentHTML('beforeend', item);
+            });
+            scrollToBottom();
+        });
+
+        socket.on('chat message', (msg) => {
+            const item = `<li><strong>${msg.username}:</strong> ${msg.message}</li>`;
+            messages.insertAdjacentHTML('beforeend', item);
+            scrollToBottom();
+        });
+
+        
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = localStorage.getItem('username');
+
+            if (input.value) {
+                socket.emit('chat message', { username, message: input.value });
+                input.value = '';
+            }
+        });
+
+        window.onload = () => {
+            const username = localStorage.getItem('username');
+            if (!username) {
+                alert('You must be logged in to access the chat.');
+                window.location.href = '/login';
+            } else {
+                console.log('Welcome to the chat,', username);
+            }
+        };
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center !important;
+            height: 100vh;
+            
+        }
+
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            width: 120%;
+            max-width: 600px;
+            height: 70vh;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages li {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            background-color: #e0e0e0;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        .messages li strong {
+            color: #4CAF50;
+            margin-right: 10px;
+        }
+
+        .input-container {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .input-container button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .input-container button:hover {
+            background-color: #45a049;
+        }
+
+        ul{
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">InternSphere</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/index.html">Inicio</a>
+                    </li>
+                   
+                    <li class="nav-item">
+                        <a class="nav-link" href="/chat">Chat</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Mi Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Lista de conversaciones (a la izquierda) -->
+            <div class="col-md-4" id="conversations-list">
+                <h3>Conversaciones</h3>
+                <ul id="conversations">
+                    <!-- Aquí se cargarán las conversaciones -->
+                </ul>
+            </div>
+    
+            <!-- Chat (a la derecha) -->
+            <div class="col-md-8">
+                <h1>Chat</h1>
+                <form id="form">
+                    <div class="chat-container">
+                        <div class="messages">
+                            <ul id="messa"></ul>
+                        </div>
+                        <div class="input-container">
+                            <input type="text" id="chat-input" placeholder="Type your message...">
+                            <button type="submit">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </form>
+</body>
+</html>

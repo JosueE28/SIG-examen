@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Iniciar Sesión</h1>
+   <form id="loginForm" method="POST" action="/login">
+    <label for="username">Usuario:</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="password">Contraseña:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Iniciar Sesión</button>
+</form>
+    <p>¿No tienes una cuenta? <a href="registro.html">Regístrate aquí</a></p>
+</body>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault();  // Prevenir el envío tradicional del formulario
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        // Enviar los datos al servidor
+        try {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            
+            // Si la respuesta es exitosa, almacenamos el username
+            if (data.user) {
+                localStorage.setItem('username', data.user.username);
+                window.location.href = '/chat'; 
+            } else {
+                alert('Login failed');
+            }
+
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('An error occurred during login');
+        }
+    });
+</script>
+
+</html>

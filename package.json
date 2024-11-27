@@ -1,0 +1,35 @@
+{
+  "name": "sig",
+  "version": "1.0.0",
+  "description": "Proyecto de prueba para aprender Node.js",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JosueE28/SIG-examen.git"
+  },
+  "keywords": [
+    "nodejs",
+    "practica"
+  ],
+  "author": "josue",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JosueE28/SIG-examen/issues"
+  },
+  "homepage": "https://github.com/JosueE28/SIG-examen#readme",
+  "devDependencies": {
+    "standard": "^17.1.2"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "db-local": "^3.1.0",
+    "ejs": "^3.1.10",
+    "express": "4.21.1",
+    "morgan": "1.10.0",
+    "socket.io": "4.8.1"
+  }
+}
