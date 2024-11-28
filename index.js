@@ -164,15 +164,11 @@ app.post('/saveInternship', async (req, res) => {
             applyLink,
         });
         await newInternship.save();
-        res.status(201).send(newInternship);
-
-        res.status(201).send(newInternship);
+        res.status(201).send(newInternship); 
     } catch (error) {
         console.error('Error al guardar la pasantía:', error);
-        res.status(500).send('Error al guardar la pasantía.');
     }
 });
-
 app.get('/internships', async (req, res) => {
     try {
         const internships = await Internship.find();

@@ -181,6 +181,7 @@
         </div>
     </div>
     
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         async function loadInternships() {
@@ -222,6 +223,7 @@
         }
 
         function editInternship(id, title, company, location, duration, description, requirements, benefits, applyLink) {
+            window.currentInternshipId = id;
             document.getElementById('editTitle').value = title;
             document.getElementById('editCompany').value = company;
             document.getElementById('editLocation').value = location;
@@ -230,44 +232,50 @@
             document.getElementById('editRequirements').value = requirements;
             document.getElementById('editBenefits').value = benefits;
             document.getElementById('editApplyLink').value = applyLink;
-
             $('#editInternshipModal').modal('show');
         }
 
         async function saveChanges() {
-            const updatedInternship = {
-                title: document.getElementById('editTitle').value,
-                company: document.getElementById('editCompany').value,
-                location: document.getElementById('editLocation').value,
-                duration: document.getElementById('editDuration').value,
-                description: document.getElementById('editDescription').value,
-                requirements: document.getElementById('editRequirements').value,
-                benefits: document.getElementById('editBenefits').value,
-                applyLink: document.getElementById('editApplyLink').value
-            };
+    const updatedInternship = {
+        title: document.getElementById('editTitle').value,
+        company: document.getElementById('editCompany').value,
+        location: document.getElementById('editLocation').value,
+        duration: document.getElementById('editDuration').value,
+        description: document.getElementById('editDescription').value,
+        requirements: document.getElementById('editRequirements').value,
+        benefits: document.getElementById('editBenefits').value,
+        applyLink: document.getElementById('editApplyLink').value
+    };
 
-            try {
-                const response = await fetch(`/updateinternship`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(updatedInternship)
-                });
+    try {
+        const internshipId = window.currentInternshipId;
 
-                const result = await response.json();
-                if (result.success) {
-                    Swal.fire('¡Éxito!', 'Pasantía actualizada correctamente', 'success');
-                    $('#editInternshipModal').modal('hide');
-                    loadInternships();
-                } else {
-                    Swal.fire('Error', 'No se pudo actualizar la pasantía', 'error');
-                }
-            } catch (error) {
-                console.error('Error al guardar cambios:', error);
-                Swal.fire('Error', 'Hubo un problema al actualizar la pasantía', 'error');
-            }
+        const response = await fetch(`/updateInternship/${internshipId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedInternship)
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            Swal.fire('¡Éxito!', 'Pasantía actualizada correctamente', 'success');
+            $('#editInternshipModal').modal('hide');
+            loadInternships();
+        } else {
+            const error = await response.text();
+            console.error('Error del servidor:', error);
+            Swal.fire('Error', 'No se pudo actualizar la pasantía', 'error');
         }
+    } catch (error) {
+        console.error('Error al guardar cambios:', error);
+        Swal.fire('Error', 'Hubo un problema al actualizar la pasantía', 'error');
+    }
+}
 
         document.addEventListener('DOMContentLoaded', loadInternships);
     </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

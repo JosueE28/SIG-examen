@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InternSphere</title>
+    <title>CampusInterns</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="css/styles.css">
@@ -12,7 +12,7 @@
     <div class="container mt-5">
         <div class="card shadow">
             <div class="card-header text-center bg-primary text-white">
-                <h2>Crear Pasantía en InternSphere</h2>
+                <h2>Crear Pasantía en CampusInterns</h2>
             </div>
             <div class="card-body">
                 <form id="internshipForm">
@@ -104,17 +104,7 @@ try {
     alert(error.message);
 }
 
-var urlParams = new URLSearchParams(window.location.search);
-if (urlParams.has('success') && urlParams.get('success') === 'false') {
-    Swal.fire({
-        title: "ERROR",
-        text: `${message}`, 
-        icon: "error",
-        confirmButtonText: "Okay"
-    }).then(() => {
-        window.location.replace(window.location.origin + '/indexempresa');
-    });
-}
+
     });
     </script>
     
