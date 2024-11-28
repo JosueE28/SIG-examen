@@ -177,6 +177,35 @@ app.get('/internships', async (req, res) => {
         res.status(500).send('Error al obtener pasantías.');
     }
 });
+
+app.put('/updateInternship/:id', async (req, res) => {
+    const { title, company, location, duration, description, requirements, benefits, applyLink } = req.body;
+    const { id } = req.params; 
+
+    try {
+        const internship = await Internship.findOne({ _id: id });
+
+        if (!internship) {
+            return res.status(404).send('Pasantía no encontrada');
+        }
+
+        internship.title = title || internship.title;
+        internship.company = company || internship.company;
+        internship.location = location || internship.location;
+        internship.duration = duration || internship.duration;
+        internship.description = description || internship.description;
+        internship.requirements = requirements || internship.requirements;
+        internship.benefits = benefits || internship.benefits;
+        internship.applyLink = applyLink || internship.applyLink;
+
+        await internship.save();
+
+        res.send(internship);
+    } catch (error) {
+        console.error('Error al actualizar la pasantía:', error);
+        res.status(500).send('Error al actualizar la pasantía.');
+    }
+});
 app.post('/logout', (req, res) =>{})
 app.post('/protected', (req, res) =>{})
 
