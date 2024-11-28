@@ -22,7 +22,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/chat2">Chat</a>
                     </li>
-                   
                     <li class="nav-item">
                         <a class="nav-link" href="/login">Cerrar Sesión</a>
                     </li>
@@ -49,6 +48,48 @@
         </div>
     </main>
 
+    <!-- Modal para editar pasantías -->
+    <div class="modal fade" id="editInternshipModal" tabindex="-1" role="dialog" aria-labelledby="editInternshipModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editInternshipModalLabel">Editar Pasantía</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editInternshipForm">
+                        <div class="form-group">
+                            <label for="editTitle">Título</label>
+                            <input type="text" class="form-control" id="editTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCompany">Empresa</label>
+                            <input type="text" class="form-control" id="editCompany" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editLocation">Ubicación</label>
+                            <input type="text" class="form-control" id="editLocation" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDuration">Duración</label>
+                            <input type="text" class="form-control" id="editDuration" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDescription">Descripción</label>
+                            <textarea class="form-control" id="editDescription" rows="4" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveChanges()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         async function loadInternships() {
             try {
@@ -65,7 +106,7 @@
 
                 internships.forEach((internship) => {
                     const internshipCard = `
-                        <div class="internship-offer mb-4 p-4 border rounded shadow-sm">
+                        <div class="internship-offer mb-4 p-4 border rounded shadow-sm" id="internship-${internship._id}">
                             <h5 class="internship-title">${internship.title}</h5>
                             <p>
                                 <strong>Empresa:</strong> ${internship.company}<br>
@@ -73,7 +114,7 @@
                                 <strong>Duración:</strong> ${internship.duration}<br>
                                 <strong>Descripción:</strong> ${internship.description}<br>
                             </p>
-                            <button class="btn btn-primary btn-sm" onclick="editInternship('${internship._id}')">Editar</button>
+                            <button class="btn btn-primary btn-sm" onclick="editInternship('${internship._id}', '${internship.title}', '${internship.company}', '${internship.location}', '${internship.duration}', '${internship.description}')">Editar</button>
                         </div>`;
                     listContainer.innerHTML += internshipCard;
                 });
@@ -83,10 +124,63 @@
             }
         }
 
-        function editInternship(id) {
-            alert(`Editar pasantía con ID: ${id}`); 
+        function editInternship(id, title, company, location, duration, description) {
+            document.getElementById('editTitle').value = title;
+            document.getElementById('editCompany').value = company;
+            document.getElementById('editLocation').value = location;
+            document.getElementById('editDuration').value = duration;
+            document.getElementById('editDescription').value = description;
+
+            window.currentInternshipId = id;
+
+            $('#editInternshipModal').modal('show');
         }
 
+        async function saveChanges() {
+    const title = document.getElementById('editTitle').value;
+    const company = document.getElementById('editCompany').value;
+    const location = document.getElementById('editLocation').value;
+    const duration = document.getElementById('editDuration').value;
+    const description = document.getElementById('editDescription').value;
+
+    const internshipId = window.currentInternshipId;
+
+    try {
+        const response = await fetch(`/updateInternship/${internshipId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title,
+                company,
+                location,
+                duration,
+                description,
+            }),
+        });
+
+        if (response.ok) {
+            const updatedInternship = await response.json();
+            await loadInternships();
+            const internshipCard = document.querySelector(`#internship-${updatedInternship._id}`);
+            internshipCard.querySelector('.internship-title').textContent = updatedInternship.title;
+            internshipCard.querySelector('p').innerHTML = `
+                <strong>Empresa:</strong> ${updatedInternship.company}<br>
+                <strong>Ubicación:</strong> ${updatedInternship.location}<br>
+                <strong>Duración:</strong> ${updatedInternship.duration}<br>
+                <strong>Descripción:</strong> ${updatedInternship.description}<br>
+            `;
+
+            $('#editInternshipModal').modal('hide');
+        } else {
+            alert('Error al actualizar la pasantía');
+        }
+    } catch (error) {
+        console.error('Error al guardar los cambios:', error);
+        alert('Error al guardar los cambios.');
+    }
+}
         loadInternships();
     </script>
 

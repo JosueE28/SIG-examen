@@ -120,17 +120,14 @@
             document.getElementById('editDuration').value = internship.duration;
             document.getElementById('editDescription').value = internship.description;
 
-            // Mostrar el formulario
             document.getElementById('editFormContainer').classList.remove('d-none');
 
-            // Guardar el índice actual
             editIndex = index;
         }
 
         function saveInternship() {
             const internships = JSON.parse(localStorage.getItem('internships')) || [];
 
-            // Actualizar los datos de la pasantía
             internships[editIndex] = {
                 title: document.getElementById('editTitle').value,
                 company: document.getElementById('editCompany').value,
@@ -139,7 +136,6 @@
                 description: document.getElementById('editDescription').value,
             };
 
-            // Guardar en localStorage y recargar
             localStorage.setItem('internships', JSON.stringify(internships));
             alert('¡Pasantía actualizada!');
             location.reload();
