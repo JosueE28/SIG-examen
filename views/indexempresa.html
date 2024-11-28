@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternSphere</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">InternSphere</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/chat">Chat</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <main class="mt-4">
+        <div class="card shadow">
+            <div class="card-header text-center bg-primary text-white">
+                <h2>Menu de empresa</h2>
+            </div>
+            <div class="card-body">
+                <!-- Sección para crear pasantías -->
+                <div class="internship-offer mb-4 p-4 border rounded shadow-sm">
+                    <h5 class="internship-title">Crear Pasantía</h5>
+                    <button class="btn btn-success" onclick="window.location.href='crearpasantia.html';">Crear</button>
+                </div>
+                
+                <!-- Lista de pasantías -->
+                <div id="internshipList" class="mt-4">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        async function loadInternships() {
+            try {
+                const response = await fetch('/internships');
+                const internships = await response.json();
+
+                const listContainer = document.getElementById('internshipList');
+                listContainer.innerHTML = '';
+
+                if (internships.length === 0) {
+                    listContainer.innerHTML = '<p class="text-center">No hay pasantías creadas aún.</p>';
+                    return;
+                }
+
+                internships.forEach((internship) => {
+                    const internshipCard = `
+                        <div class="internship-offer mb-4 p-4 border rounded shadow-sm">
+                            <h5 class="internship-title">${internship.title}</h5>
+                            <p>
+                                <strong>Empresa:</strong> ${internship.company}<br>
+                                <strong>Ubicación:</strong> ${internship.location}<br>
+                                <strong>Duración:</strong> ${internship.duration}<br>
+                                <strong>Descripción:</strong> ${internship.description}<br>
+                            </p>
+                            <button class="btn btn-primary btn-sm" onclick="editInternship('${internship._id}')">Editar</button>
+                        </div>`;
+                    listContainer.innerHTML += internshipCard;
+                });
+            } catch (error) {
+                console.error('Error al cargar las pasantías:', error);
+                document.getElementById('internshipList').innerHTML = '<p class="text-danger">Error al cargar las pasantías.</p>';
+            }
+        }
+
+        function editInternship(id) {
+            alert(`Editar pasantía con ID: ${id}`); 
+        }
+
+        loadInternships();
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -22,8 +22,7 @@
 
 <script>
     document.getElementById('loginForm').addEventListener('submit', async function(event) {
-        event.preventDefault();  o
-
+        event.preventDefault();  
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
@@ -40,7 +39,14 @@
             
             if (data.user) {
                 localStorage.setItem('username', data.user.username);
-                window.location.href = '/chat'; 
+
+                if (data.user.select === 'empresa') {
+                    window.location.href = 'indexempresa.html'; 
+                } else if (data.user.select === 'estudiante') {
+                    window.location.href = 'index.html'; 
+                } else {
+                    alert('Tipo de usuario no reconocido');
+                }
             } else {
                 alert('Login failed');
             }

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternSphere</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">InternSphere</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="Pasantíasdempresa.html">Pasantías de la empresa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="indexempresa.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Conexiones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Mi Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="mt-4">
+            <div class="card shadow">
+                <div class="card-header text-center bg-primary text-white">
+                    <h2>Menú de empresa</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                       
+                    <div id="internshipContainer">
+                        <!-- Aquí se mostrarán las pasantías creadas -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de edición -->
+            <div id="editFormContainer" class="mt-4 d-none">
+                <div class="card shadow">
+                    <div class="card-header bg-secondary text-white">
+                        <h3>Editar Pasantía</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="editForm">
+                            <div class="form-group">
+                                <label for="editTitle">Título</label>
+                                <input type="text" id="editTitle" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editCompany">Empresa</label>
+                                <input type="text" id="editCompany" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editLocation">Ubicación</label>
+                                <input type="text" id="editLocation" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editDuration">Duración</label>
+                                <input type="text" id="editDuration" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="editDescription">Descripción</label>
+                                <textarea id="editDescription" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="saveInternship()">Guardar Cambios</button>
+                            <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let editIndex = null;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('internshipContainer');
+            const internships = JSON.parse(localStorage.getItem('internships')) || [];
+
+            if (internships.length === 0) {
+                container.innerHTML = '<p class="text-center">No hay pasantías creadas actualmente.</p>';
+                return;
+            }
+
+            internships.forEach((internship, index) => {
+                const internshipElement = document.createElement('div');
+                internshipElement.className = 'internship-offer mb-4 p-4 border rounded shadow-sm';
+                internshipElement.innerHTML = `
+                    <h5 class="internship-title">${internship.title}</h5>
+                    <p><strong>Empresa:</strong> ${internship.company}</p>
+                    <p><strong>Ubicación:</strong> ${internship.location}</p>
+                    <p><strong>Duración:</strong> ${internship.duration || 'No especificada'}</p>
+                    <p><strong>Descripción:</strong> ${internship.description}</p>
+                    <button class="btn btn-primary btn-sm" onclick="showEditForm(${index})">Editar</button>
+                    <button class="btn btn-danger btn-sm ml-2" onclick="deleteInternship(${index})">Eliminar</button>
+                `;
+                container.appendChild(internshipElement);
+            });
+        });
+
+        function showEditForm(index) {
+            const internships = JSON.parse(localStorage.getItem('internships')) || [];
+            const internship = internships[index];
+
+            // Llenar los campos del formulario
+            document.getElementById('editTitle').value = internship.title;
+            document.getElementById('editCompany').value = internship.company;
+            document.getElementById('editLocation').value = internship.location;
+            document.getElementById('editDuration').value = internship.duration;
+            document.getElementById('editDescription').value = internship.description;
+
+            // Mostrar el formulario
+            document.getElementById('editFormContainer').classList.remove('d-none');
+
+            // Guardar el índice actual
+            editIndex = index;
+        }
+
+        function saveInternship() {
+            const internships = JSON.parse(localStorage.getItem('internships')) || [];
+
+            // Actualizar los datos de la pasantía
+            internships[editIndex] = {
+                title: document.getElementById('editTitle').value,
+                company: document.getElementById('editCompany').value,
+                location: document.getElementById('editLocation').value,
+                duration: document.getElementById('editDuration').value,
+                description: document.getElementById('editDescription').value,
+            };
+
+            // Guardar en localStorage y recargar
+            localStorage.setItem('internships', JSON.stringify(internships));
+            alert('¡Pasantía actualizada!');
+            location.reload();
+        }
+
+        function cancelEdit() {
+            document.getElementById('editFormContainer').classList.add('d-none');
+            editIndex = null;
+        }
+
+        function deleteInternship(index) {
+            const internships = JSON.parse(localStorage.getItem('internships')) || [];
+            if (confirm('¿Estás seguro de que deseas eliminar esta pasantía?')) {
+                internships.splice(index, 1); // Eliminar pasantía del array
+                localStorage.setItem('internships', JSON.stringify(internships));
+                alert('¡Pasantía eliminada!');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
