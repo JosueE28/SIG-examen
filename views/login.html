@@ -41,9 +41,9 @@
                 localStorage.setItem('username', data.user.username);
 
                 if (data.user.select === 'empresa') {
-                    window.location.href = 'indexempresa.html'; 
+                    window.location.href = '/empresa/indexempresa.html'; 
                 } else if (data.user.select === 'estudiante') {
-                    window.location.href = 'index.html'; 
+                    window.location.href = '/estudiante/index.html'; 
                 } else {
                     alert('Tipo de usuario no reconocido');
                 }
