@@ -86,6 +86,10 @@ app.get('/curriculumvista', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'views', 'estudiante', 'curriculumvista.html'));;
 });
 
+app.get('/crearpasantia', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'views', 'empresa', 'crearpasantia.html'));;
+});
+
 
 
 

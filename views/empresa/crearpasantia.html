@@ -80,7 +80,6 @@
             return;
         }
 
-        // Enviar la pasantía al servidor
         try {
             const response = await fetch('/saveInternship', {
                 method: 'POST',
@@ -90,7 +89,7 @@
 
             if (response.ok) {
                 alert('¡Pasantía guardada exitosamente!');
-                window.location.href = 'indexempresa.html';
+                window.location.href = '/indexempresa';
             } else {
                 throw new Error('Error al guardar la pasantía.');
             }
