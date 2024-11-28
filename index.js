@@ -73,6 +73,11 @@ app.use(express.static(process.cwd()));
 app.get('/index', (req, res) =>{
     res.sendFile(path.join(process.cwd(), 'views', 'estudiante','index.html'));
 })
+
+app.get('/', (req, res) =>{
+    res.sendFile(path.join(process.cwd(), 'views', 'login.html'));
+})
+
 app.get('/indexempresa', (req, res) =>{
     res.sendFile(path.join(process.cwd(), 'views', 'empresa','indexempresa.html'));
 })

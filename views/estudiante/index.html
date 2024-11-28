@@ -3,50 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InternSphere</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+
+    <title>InternSphere</title>
+    <style>
+        /* General */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f2ef;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #0a66c2;
+        }
+        .nav-link {
+            color: #6c757d;
+        }
+        .nav-link:hover {
+            color: #0a66c2;
+        }
+        .main-content {
+            margin-top: 20px;
+        }
+
+        main {
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #0073b1;
+            color: #ffffff;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.25em;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .internship-offer {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .internship-title {
+            color: #0073b1;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            color: #ffffff;
+            background-color: #0073b1;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+        }
+
+        .btn:hover {
+            background-color: #005582;
+        }
+
+        /* Footer (optional) */
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #ffffff;
+            border-top: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo span.campus {
+            font-size: 33px;
+            font-weight: bold;
+            color: #0077b5;
+        }
+
+        .logo span.interns {
+            font-size: 27px;
+            font-weight: bold;
+            color: #000000;
+        }
+    </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">InternSphere</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/index">
+                <div class="logo">
+                    <span class="campus">Campus</span><span class="interns">Interns</span>
+                </div>
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="/index">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/chat">Chat</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/curriculumvista">Mi Perfil</a>
+                        <a class="nav-link" href="/curriculumvista">Mi perfil</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/login">Cerrar Sesión</a>
                     </li>
                 </ul>
             </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
 
-    <main class="mt-4">
-        <div class="card shadow">
-            <div class="card-header text-center bg-primary text-white">
-                <h2>Ofertas de Pasantías en InternSphere</h2>
-            </div>
+    <!-- Main content -->
+    <main>
+        <div class="card">
+            <div class="card-header">Ofertas de Pasantías en CampusInterns</div>
             <div class="card-body" id="internshipContainer">
                 <p class="text-center">Cargando pasantías...</p>
             </div>
         </div>
     </main>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <footer>
+        <p>&copy; 2024 CampusInterns</p>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
@@ -65,17 +172,23 @@
 
                 internships.forEach(internship => {
                     const internshipElement = document.createElement('div');
-                    internshipElement.className = 'internship-offer mb-4 p-4 border rounded shadow-sm';
+                    internshipElement.className = 'internship-offer';
                     internshipElement.innerHTML = `
                         <h5 class="internship-title">${internship.title}</h5>
                         <p><strong>Empresa:</strong> ${internship.company}</p>
                         <p><strong>Ubicación:</strong> ${internship.location}</p>
                         <p><strong>Duración:</strong> ${internship.duration || 'No especificada'}</p>
                         <p><strong>Descripción:</strong> ${internship.description}</p>
-                        <button class="btn btn-success" onclick="window.location.href='/chat';">Aplicar Ahora</button>
+                        <p><strong>Requisitos:</strong> ${internship.requirements || 'No especificados'}</p>
+                        <p><strong>Beneficios:</strong> ${internship.benefits || 'No especificados'}</p>
+                        <p><a class="btn" href="${internship.applyLink}">Aplicar Ahora</a>
+                        <a class="btn" href="/chat">Contactar</a>
+
+                            </p>
                     `;
                     container.appendChild(internshipElement);
                 });
+
             } catch (error) {
                 console.error('Error al cargar las pasantías:', error);
                 container.innerHTML = '<p class="text-danger text-center">Error al cargar las pasantías. Por favor, inténtalo más tarde.</p>';
