@@ -1,9 +1,12 @@
 import express from 'express'
 import { PORT } from './src/config/config.js' 
-import { userRepository, chatRepository } from './src/repository/user-repository.js'
+import { userRepository, chatRepository,Internship } from './src/repository/user-repository.js'
 import path from 'path';
 import { Server } from 'socket.io'
 import { createServer } from 'node:http';
+import bcrypt from 'bcrypt'
+import crypto from 'crypto'; // Importación del módulo crypto
+
 
 const app = express()
 const server = createServer(app)
@@ -76,6 +79,8 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'views','login.html'));;
 });
 
+
+
 app.get('/register', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'views','registro.html'));
 });
@@ -83,7 +88,6 @@ app.get('/register', (req, res) => {
 app.get('/chat', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'views','chat.html'));
 });
-// En el archivo index.js (o el que gestiona los sockets)
 
 
 app.post('/login', async (req, res) =>{
@@ -119,6 +123,44 @@ app.post('/register', async (req, res) => {
         res.status(400).send(error.message)
     }
 })
+
+
+
+
+app.post('/saveInternship', async (req, res) => {
+    const { title, company, location, duration, description, requirements, benefits, applyLink } = req.body;
+
+    try {
+        const newInternship = await Internship.create({
+            _id: crypto.randomUUID(),
+            title,
+            company,
+            location,
+            duration,
+            description,
+            requirements,
+            benefits,
+            applyLink,
+        });
+        await newInternship.save();
+        res.status(201).send(newInternship);
+
+        res.status(201).send(newInternship);
+    } catch (error) {
+        console.error('Error al guardar la pasantía:', error);
+        res.status(500).send('Error al guardar la pasantía.');
+    }
+});
+
+app.get('/internships', async (req, res) => {
+    try {
+        const internships = await Internship.find();
+        res.send(internships);
+    } catch (error) {
+        console.error('Error al obtener pasantías:', error);
+        res.status(500).send('Error al obtener pasantías.');
+    }
+});
 app.post('/logout', (req, res) =>{})
 app.post('/protected', (req, res) =>{})
 

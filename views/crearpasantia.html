@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternSphere</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header text-center bg-primary text-white">
+                <h2>Crear Pasantía en InternSphere</h2>
+            </div>
+            <div class="card-body">
+                <form id="internshipForm">
+                    <div class="form-group">
+                        <label for="title">Título de la Pasantía</label>
+                        <input type="text" class="form-control" id="title" placeholder="Ingresa el título de la pasantía" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="company">Empresa</label>
+                        <input type="text" class="form-control" id="company" placeholder="Ingresa el nombre de la empresa" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Ubicación</label>
+                        <input type="text" class="form-control" id="location" placeholder="Ingresa la ubicación de la pasantía" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duración</label>
+                        <input type="text" class="form-control" id="duration" placeholder="Especifica la duración (ej.: 3 meses)" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Descripción de la Pasantía</label>
+                        <textarea class="form-control" id="description" rows="4" placeholder="Describe las actividades y responsabilidades de la pasantía" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="requirements">Requisitos</label>
+                        <textarea class="form-control" id="requirements" rows="3" placeholder="Especifica los requisitos para los postulantes" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="benefits">Beneficios</label>
+                        <textarea class="form-control" id="benefits" rows="3" placeholder="Describe los beneficios ofrecidos" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="applyLink">Enlace para Aplicar</label>
+                        <input type="url" class="form-control" id="applyLink" placeholder="Ingresa el enlace donde los postulantes pueden aplicar">
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success btn-lg mt-3" id="saveInternship">Crear</button>
+                    </div>
+                    <div id="feedback" class="mt-3 text-center" style="display: none;">
+                        <p class="text-success font-weight-bold">¡Pasantía guardada exitosamente!</p>
+                        <button type="button" class="btn btn-primary" id="previewButton">Ver Vista Previa</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+    <script>
+        document.getElementById('saveInternship').addEventListener('click', async function () {
+        const internship = {
+            title: document.getElementById('title').value,
+            company: document.getElementById('company').value,
+            location: document.getElementById('location').value,
+            duration: document.getElementById('duration').value,
+            description: document.getElementById('description').value,
+            requirements: document.getElementById('requirements').value,
+            benefits: document.getElementById('benefits').value,
+            applyLink: document.getElementById('applyLink').value,
+        };
+
+        // Validar campos básicos
+        if (!internship.title || !internship.company || !internship.location || !internship.description) {
+            alert('Por favor, completa todos los campos obligatorios.');
+            return;
+        }
+
+        // Enviar la pasantía al servidor
+        try {
+            const response = await fetch('/saveInternship', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(internship),
+            });
+
+            if (response.ok) {
+                alert('¡Pasantía guardada exitosamente!');
+                window.location.href = 'indexempresa.html';
+            } else {
+                throw new Error('Error al guardar la pasantía.');
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+    </script>
+    
+</body>
+</html>

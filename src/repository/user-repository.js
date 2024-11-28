@@ -61,6 +61,17 @@ const ChatMessage = Schema('ChatMessage', {
     message: { type: String, required: true },
 });
 
+const Internship = Schema('Internship', {
+    _id: { type: String, required: true },
+    title: { type: String, required: true },
+    company: { type: String, required: true },
+    location: { type: String, required: true },
+    duration: { type: String, required: true },
+    description: { type: String, required: true },
+    requirements: { type: String },
+    benefits: { type: String },
+    applyLink: { type: String },
+});
 
 export class chatRepository {
     static async saveMessage({ username, message }) {
@@ -79,6 +90,7 @@ export class chatRepository {
         return messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
     }
 }
+
 class Validation{
     static username(username){
         if(typeof username!== 'string') throw new Error('username must be a string')
@@ -87,3 +99,4 @@ class Validation{
         if(typeof password!== 'string') throw new Error('password must be a string')
         }
 }
+export { Internship };
