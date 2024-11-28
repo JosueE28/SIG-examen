@@ -70,8 +70,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(process.cwd(), 'views')));
 
 app.use(express.static(process.cwd())); 
-app.get('/', (req, res) =>{
-    res.sendFile(path.join(process.cwd(), 'views','index.html'));
+app.get('/index', (req, res) =>{
+    res.sendFile(path.join(process.cwd(), 'views', 'estudiante','index.html'));
+})
+app.get('/indexempresa', (req, res) =>{
+    res.sendFile(path.join(process.cwd(), 'views', 'empresa','indexempresa.html'));
 })
 
 
@@ -79,14 +82,23 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'views','login.html'));;
 });
 
+app.get('/curriculumvista', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'views', 'estudiante', 'curriculumvista.html'));;
+});
+
+
 
 
 app.get('/register', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'views','registro.html'));
 });
 
+app.get('/chat2', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'views', 'empresa', 'chat2.html'));
+});
+
 app.get('/chat', (req, res) => {
-    res.sendFile(path.join(process.cwd(), 'views','chat.html'));
+    res.sendFile(path.join(process.cwd(), 'views', 'estudiante','chat.html'));
 });
 
 
