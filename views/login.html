@@ -1,61 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="styles.css">
     <title>Login</title>
-</head>
-<body>
-    <h1>Iniciar Sesión</h1>
-   <form id="loginForm" method="POST" action="/login">
-    <label for="username">Usuario:</label>
-    <input type="text" id="username" name="username" required>
-
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" required>
-
-    <button type="submit">Iniciar Sesión</button>
-</form>
-    <p>¿No tienes una cuenta? <a href="/register">Regístrate aquí</a></p>
-</body>
-
-<script>
-    document.getElementById('loginForm').addEventListener('submit', async function(event) {
-        event.preventDefault();  
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        try {
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password })
-            });
-
-            const data = await response.json();
-            
-            if (data.user) {
-                localStorage.setItem('username', data.user.username);
-
-                if (data.user.select === 'empresa') {
-                    window.location.href = '/empresa/indexempresa.html'; 
-                } else if (data.user.select === 'estudiante') {
-                    window.location.href = '/estudiante/index.html'; 
-                } else {
-                    alert('Tipo de usuario no reconocido');
-                }
-            } else {
-                alert('Login failed');
-            }
-
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('An error occurred during login');
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-    });
-</script>
+
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            color: #0077b5;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo span.campus {
+            font-size: 42px;
+            font-weight: bold;
+            color: #0077b5;
+        }
+
+        .logo span.interns {
+            font-size: 35px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        label {
+            font-size: 14px;
+            color: #333;
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #0077b5;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #005582;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .register-link a {
+            color: #0077b5;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Logo con dos partes -->
+        <div class="logo">
+            <span class="campus">Campus</span><span class="interns">Interns</span>
+        </div>
+        <h1>Iniciar Sesión</h1>
+        <form id="loginForm" method="POST" action="/login">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+
+            <input type="submit" value="Iniciar Sesión">
+        </form>
+        <div class="register-link">
+            <p>¿No tienes una cuenta? <a href="/register">Regístrate aquí</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.user) {
+                    localStorage.setItem('username', data.user.username);
+
+                    if (data.user.select === 'empresa') {
+                        window.location.href = '/empresa/indexempresa.html';
+                    } else if (data.user.select === 'estudiante') {
+                        window.location.href = '/estudiante/index.html';
+                    } else {
+                        alert('Tipo de usuario no reconocido');
+                    }
+                } else {
+                    alert('Login failed');
+                }
+
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('An error occurred during login');
+            }
+        });
+    </script>
+</body>
 
 </html>

@@ -1,198 +1,260 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHAT</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-    <script type="module">
-        import { io } from 'https://cdn.jsdelivr.net/npm/socket.io-client@4.8.1/dist/socket.io.esm.min.js';
-        const socket = io();
-
-        const form = document.getElementById('form');
-        const input = document.getElementById('chat-input');
-        const messages = document.getElementById('messa');
-
-        const scrollToBottom = () => {
-            messages.scrollTop = messages.scrollHeight;
-        };
-
-        socket.on('connect', () => {
-            const username = localStorage.getItem('username');
-            socket.emit('set username', username);
-        });
-
-        socket.on('chat history', (history) => {
-            messages.innerHTML = '';
-            history.reverse().forEach((msg) => {
-                const item = `<li><strong>${msg.username}:</strong> ${msg.message}</li>`;
-                messages.insertAdjacentHTML('beforeend', item);
-            });
-            scrollToBottom();
-        });
-
-        socket.on('chat message', (msg) => {
-            const item = `<li><strong>${msg.username}:</strong> ${msg.message}</li>`;
-            messages.insertAdjacentHTML('beforeend', item);
-            scrollToBottom();
-        });
-
-        
-
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const username = localStorage.getItem('username');
-
-            if (input.value) {
-                socket.emit('chat message', { username, message: input.value });
-                input.value = '';
-            }
-        });
-
-        window.onload = () => {
-            const username = localStorage.getItem('username');
-            if (!username) {
-                alert('You must be logged in to access the chat.');
-                window.location.href = '/login';
-            } else {
-                console.log('Welcome to the chat,', username);
-            }
-        };
-    </script>
-
+    <title>CampusInterns</title>
     <style>
+        /* General */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
-            display: flex !important;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center !important;
-            height: 100vh;
-            
+            background-color: #f3f2ef;
         }
 
-        h1 {
-            color: #4CAF50;
-            margin-bottom: 20px;
-        }
-
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            width: 120%;
-            max-width: 600px;
-            height: 70vh;
+        /* Navbar */
+        .navbar {
             background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #0a66c2;
+        }
+        .nav-link {
+            color: #6c757d;
+        }
+        .nav-link:hover {
+            color: #0a66c2;
+        }
+        .main-content {
+            margin-top: 20px;
+        }
+        /* Main content */
+        main {
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #ffffff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
             overflow: hidden;
         }
 
-        .messages {
-            flex: 1;
-            padding: 10px;
-            overflow-y: auto;
+        .card-header {
+            background-color: #0073b1;
+            color: #ffffff;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.25em;
+        }
+
+        .card-body {
+            padding: 20px;
             display: flex;
             flex-direction: column;
+            gap: 10px;
         }
 
-        .messages li {
-            margin-bottom: 10px;
-            padding: 8px 12px;
-            border-radius: 5px;
-            background-color: #e0e0e0;
-            max-width: 70%;
-            word-wrap: break-word;
-        }
+        ul {
+    list-style-type: none;
+    padding: 0;
+}
 
-        .messages li strong {
-            color: #4CAF50;
-            margin-right: 10px;
-        }
+.chat-message {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;  
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px; 
+}
 
-        .input-container {
+.chat-message.user {
+    background-color: #e4e4e4;
+    color: black;
+}
+
+.chat-message.other {
+    background-color: #f1f1f1;
+    color: #333;
+}
+
+.chat-message .user {
+    font-weight: bold;
+}
+
+.chat-message .message {
+    margin-top: 5px;
+}
+        .input-group {
             display: flex;
-            border-top: 1px solid #ddd;
+            gap: 10px;
         }
 
-        .input-container input {
+        .input-group input {
             flex: 1;
             padding: 10px;
-            border: none;
-            outline: none;
-            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 1em;
         }
 
-        .input-container button {
-            padding: 10px 20px;
-            border: none;
-            background-color: #4CAF50;
+        .input-group button {
+            background-color: #0073b1;
             color: white;
-            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
+            font-size: 1em;
         }
 
-        .input-container button:hover {
-            background-color: #45a049;
+        .input-group button:hover {
+            background-color: #005582;
         }
 
-        ul{
-            list-style-type: none;
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #ffffff;
+            border-top: 1px solid #ddd;
+            margin-top: 20px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo span.campus {
+            font-size: 33px;
+            font-weight: bold;
+            color: #0077b5;
+        }
+
+        .logo span.interns {
+            font-size: 27px;
+            font-weight: bold;
+            color: #000000;
         }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">InternSphere</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="/index">
+                <div class="logo">
+                    <span class="campus">Campus</span><span class="interns">Interns</span>
+                </div>
+            </a>            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link" href="/index">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/chat">Chat</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/curriculumvista">Mi Perfil</a>
+                        <a class="nav-link" href="/curriculumvista">Mi perfil</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/login">Cerrar Sesión</a>
                     </li>
                 </ul>
             </div>
-        </nav>
-    </div>
-    </div>
-    <div class="">
-        <div class="row">
-           
-    
-            <div class="col-md-8">
-                <h1>Chat</h1>
-                <form id="form">
-                    <div class="chat-container">
-                        <div class="messages">
-                            <ul id="messa"></ul>
-                        </div>
-                        <div class="input-container">
-                            <input type="text" id="chat-input" placeholder="Type your message...">
-                            <button type="submit">Send</button>
-                        </div>
-                    </div>
-                </form>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <main>
+        <div class="card">
+            <div class="card-header">Chat en Vivo</div>
+            <div class="card-body">
+                <ul id="messa">
+                    <!-- Aquí se cargarán los mensajes -->
+                </ul>
+                <div class="input-group">
+                    <input type="text" id="chat-input" placeholder="Escribe tu mensaje..." />
+                    <button id="sendButton">Enviar</button>
+                </div>
             </div>
         </div>
-    </div>
-    </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 CampusInterns</p>
+    </footer>
+
+    <script type="module">
+        import { io } from 'https://cdn.jsdelivr.net/npm/socket.io-client@4.8.1/dist/socket.io.esm.min.js';
+        const socket = io();
+    
+        const input = document.getElementById('chat-input');
+        const messages = document.getElementById('messa');
+        const sendButton = document.getElementById('sendButton');
+    
+        const scrollToBottom = () => {
+            messages.scrollTop = messages.scrollHeight;
+        };
+    
+        socket.on('connect', () => {
+            const username = localStorage.getItem('username');
+            socket.emit('set username', username);
+        });
+    
+        socket.on('chat history', (history) => {
+    messages.innerHTML = '';
+    history.reverse().forEach((msg) => {
+        const itemClass = msg.username === localStorage.getItem('username') ? 'user' : 'other';
+        const item = `
+            <li class="chat-message ${itemClass}">
+                <strong class="user">${msg.username}:</strong>
+                <div class="message">${msg.message}</div>
+            </li>`;
+        messages.insertAdjacentHTML('beforeend', item);
+    });
+    scrollToBottom();
+});
+
+socket.on('chat message', (msg) => {
+    const itemClass = msg.username === localStorage.getItem('username') ? 'user' : 'other';
+    const item = `
+        <li class="chat-message ${itemClass}">
+            <strong class="user">${msg.username}:</strong>
+            <div class="message">${msg.message}</div>
+        </li>`;
+    messages.insertAdjacentHTML('beforeend', item);
+    scrollToBottom();
+});
+    
+        sendButton.addEventListener('click', (e) => {
+            const username = localStorage.getItem('username');
+    
+            if (input.value) {
+                socket.emit('chat message', { username, message: input.value });
+                input.value = ''; 
+            }
+        });
+    
+        window.onload = () => {
+            const username = localStorage.getItem('username');
+            if (!username) {
+                alert('Debes iniciar sesión para acceder al chat.');
+                window.location.href = '/login';
+            } else {
+                console.log('Bienvenido al chat,', username);
+            }
+        };
+    </script>
+     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2"></script>
 </body>
 </html>
