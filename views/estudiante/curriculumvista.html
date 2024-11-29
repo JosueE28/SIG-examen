@@ -32,48 +32,113 @@
             </div>
         </nav>
     </div>
-        <main class="mt-4">
-            <div class="card shadow">
-                <div class="card-header text-center bg-primary text-white">
-                    <h2>Currículum de Juan Pérez</h2>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <img src="https://via.placeholder.com/150" class="rounded-circle mb-4" alt="Foto de Juan Pérez">
-                            <h5>Información Personal</h5>
-                            <p><strong>Nombre:</strong> Juan Pérez</p>
-                            <p><strong>Email:</strong> juan.perez@email.com</p>
-                            <p><strong>Teléfono:</strong> +507 6282-0293</p>
-                            <p><strong>Ubicación:</strong> Chiriquí, Boquete</p>
-                        </div>
-                        <div class="col-md-8">
-                            <h5>Perfil Profesional</h5>
-                            <p>Estudiante de Ingeniería de Software con un fuerte interés en desarrollo web y móvil. Apasionado por aprender nuevas tecnologías y contribuir a proyectos innovadores.</p>
+    <main class="mt-4">
+        <div class="card shadow">
+            <div class="card-header text-center bg-primary text-white">
+                <h2>Currículum de Juan Pérez</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="https://via.placeholder.com/150" class="rounded-circle mb-4" alt="Foto de Juan Pérez">
+                        <h5>Información Personal</h5>
+                        <p><strong>Nombre:</strong> <span id="nombre">Juan Pérez</span></p>
+                        <p><strong>Email:</strong> <span id="email">juan.perez@email.com</span></p>
+                        <p><strong>Teléfono:</strong> <span id="telefono">+507 6282-0293</span></p>
+                        <p><strong>Ubicación:</strong> <span id="ubicacion">Chiriquí, Boquete</span></p>
+                    </div>
+                    <div class="col-md-8">
+                        <h5>Perfil Profesional</h5>
+                        <p id="perfil">Estudiante de Ingeniería de Software con un fuerte interés en desarrollo web y móvil. Apasionado por aprender nuevas tecnologías y contribuir a proyectos innovadores.</p>
 
-                            <h5>Experiencia</h5>
-                            <ul>
-                                <li><strong>Pasantía en Desarrollo Web</strong> - Empresa XYZ (2023)</li>
-                                <li><strong>Desarrollador Freelance</strong> - Proyectos Personales (2022)</li>
-                            </ul>
+                        <h5>Experiencia</h5>
+                        <ul id="experiencia">
+                            <li><strong>Pasantía en Desarrollo Web</strong> - Empresa XYZ (2023)</li>
+                            <li><strong>Desarrollador Freelance</strong> - Proyectos Personales (2022)</li>
+                        </ul>
 
-                            <h5>Educación</h5>
-                            <p><strong>Universidad Tecnológica de Panamá</strong> - Ingeniería de Software (2020 - Presente)</p>
+                        <h5>Educación</h5>
+                        <p id="educacion"><strong>Universidad Tecnológica de Panamá</strong> - Ingeniería de Software (2020 - Presente)</p>
 
-                            <h5>Habilidades</h5>
-                            <p>JavaScript, HTML, CSS, React, Node.js</p>
-                        </div>
+                        <h5>Habilidades</h5>
+                        <p id="habilidades">JavaScript, HTML, CSS, React, Node.js</p>
                     </div>
                 </div>
-                <div class="card-footer text-center">
-                    <button class="btn btn-success btn-lg">Responder</button>
+            </div>
+            <div class="card-footer text-center">
+                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#editModal">Modificar</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Modificar Información</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <div class="form-group">
+                            <label for="editNombre">Nombre</label>
+                            <input type="text" id="editNombre" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="editEmail">Email</label>
+                            <input type="email" id="editEmail" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="editTelefono">Teléfono</label>
+                            <input type="text" id="editTelefono" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="editUbicacion">Ubicación</label>
+                            <input type="text" id="editUbicacion" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="editPerfil">Perfil Profesional</label>
+                            <textarea id="editPerfil" class="form-control"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="saveChanges">Guardar Cambios</button>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('saveChanges').addEventListener('click', function () {
+            const nombre = document.getElementById('editNombre').value;
+            const email = document.getElementById('editEmail').value;
+            const telefono = document.getElementById('editTelefono').value;
+            const ubicacion = document.getElementById('editUbicacion').value;
+            const perfil = document.getElementById('editPerfil').value;
+
+            document.getElementById('nombre').textContent = nombre;
+            document.getElementById('email').textContent = email;
+            document.getElementById('telefono').textContent = telefono;
+            document.getElementById('ubicacion').textContent = ubicacion;
+            document.getElementById('perfil').textContent = perfil;
+
+            $('#editModal').modal('hide');
+        });
+
+        $('#editModal').on('show.bs.modal', function () {
+            document.getElementById('editNombre').value = document.getElementById('nombre').textContent;
+            document.getElementById('editEmail').value = document.getElementById('email').textContent;
+            document.getElementById('editTelefono').value = document.getElementById('telefono').textContent;
+            document.getElementById('editUbicacion').value = document.getElementById('ubicacion').textContent;
+            document.getElementById('editPerfil').value = document.getElementById('perfil').textContent;
+        });
+    </script>
 </body>
 </html>
