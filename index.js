@@ -1,6 +1,6 @@
 import express from 'express'
 import { PORT } from './src/config/config.js' 
-import { userRepository, chatRepository,Internship } from './src/repository/user-repository.js'
+import { userRepository, chatRepository,Internship, Curriculum, curriculumRepository } from './src/repository/user-repository.js'
 import path from 'path';
 import { Server } from 'socket.io'
 import { createServer } from 'node:http';
@@ -167,6 +167,28 @@ app.post('/saveInternship', async (req, res) => {
         res.status(201).send(newInternship); 
     } catch (error) {
         console.error('Error al guardar la pasantía:', error);
+    }
+});
+// Ruta GET para obtener el currículum
+app.get('/curriculum1', async (req, res) => {
+    try {
+        const curriculum = await curriculumRepository.getCurriculum();
+        res.json(curriculum || null);
+    } catch (error) {
+        console.error('Error al obtener el currículum:', error);
+        res.status(500).send('Error al obtener el currículum.');
+    }
+});
+
+// Ruta POST para guardar o actualizar el currículum
+app.put('/curriculum', async (req, res) => {
+    try {
+        const updatedCurriculum = req.body; // Recibe los datos actualizados del cuerpo de la solicitud
+        const result = await curriculumRepository.saveCurriculum(updatedCurriculum);
+        res.status(200).json(result); // Devuelve el currículum actualizado
+    } catch (error) {
+        console.error('Error actualizando el currículum:', error);
+        res.status(500).send('Error actualizando el currículum');
     }
 });
 app.get('/internships', async (req, res) => {

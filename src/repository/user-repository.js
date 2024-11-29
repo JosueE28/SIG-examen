@@ -90,6 +90,78 @@ export class chatRepository {
         return messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
     }
 }
+const Curriculum = Schema('Curriculum', {
+    _id: { type: String, required: true, default: () => crypto.randomUUID() },  // Usar crypto.randomUUID para generar el ID
+    name: { type: String },
+    email: { type: String },
+    telefono: { type: String },
+    ubicacion: { type: String },
+    perfil: { type: String },
+    experience: { type: Array },
+    education: { type: String },
+    skills: { type: Array },
+});
+
+
+export class curriculumRepository {
+    static async getCurriculum() {
+        try {
+            
+            const curriculums = await Curriculum.find(); 
+
+            return curriculums;
+        } catch (error) {
+            throw new Error('Error al obtener los currículums');
+        }
+    }
+    static async saveCurriculum(data = {}) {
+        const {
+            name,
+            email,
+            telefono,
+            ubicacion,
+            perfil,
+            experience,
+            education,
+            skills
+        } = data;
+    
+        try {
+            if (!name) {
+                throw new Error('El nombre es obligatorio para actualizar un currículum');
+            }
+    
+            console.log('Datos a actualizar:', data);
+    
+            // Buscar el currículum existente por nombre
+            const existingCurriculum = await Curriculum.findOne({ name });
+            console.log('Currículum existente:', existingCurriculum);
+    
+            if (existingCurriculum) {
+                // Actualizar el currículum existente
+                existingCurriculum.email = email || existingCurriculum.email;
+                existingCurriculum.telefono = telefono || existingCurriculum.telefono;
+                existingCurriculum.ubicacion = ubicacion || existingCurriculum.ubicacion;
+                existingCurriculum.perfil = perfil || existingCurriculum.perfil;
+                existingCurriculum.experience = experience || existingCurriculum.experience;
+                existingCurriculum.education = education || existingCurriculum.education;
+                existingCurriculum.skills = skills || existingCurriculum.skills;
+    
+                await existingCurriculum.save();
+                console.log('Currículum actualizado:', existingCurriculum);
+                return existingCurriculum;
+            } else {
+                // Si no existe, devolver un error
+                throw new Error(`No se encontró un currículum con el nombre: ${name}`);
+            }
+        } catch (error) {
+            console.error('Error al actualizar el currículum:', error);
+            throw new Error('Error al actualizar el currículum');
+        }
+    }
+    
+}
+
 
 class Validation{
     static username(username){
@@ -99,4 +171,4 @@ class Validation{
         if(typeof password!== 'string') throw new Error('password must be a string')
         }
 }
-export { Internship };
+export { Internship, Curriculum };
