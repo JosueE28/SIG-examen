@@ -6,6 +6,17 @@
     <title>CampusInterns</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        .btn-modificar {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+        }
+        .btn-modificar:hover {
+            background-color: #0056b3; 
+        }
+    </style>
 </head>
 <body>
     <div class="container-fluid">
@@ -35,7 +46,7 @@
     <main class="mt-4">
         <div class="card shadow">
             <div class="card-header text-center bg-primary text-white">
-                <h2>Currículum de Juan Pérez</h2>
+                <h2>Currículum de <span id="nombre">Juan Pérez</span></h2>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -66,17 +77,17 @@
                 </div>
             </div>
             <div class="card-footer text-center">
-                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#editModal">Modificar</button>
+                <button class="btn btn-modificar btn-lg" data-toggle="modal" data-target="#editModal">Modificar</button>
             </div>
         </div>
     </main>
 
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Modificar Información</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title" id="editModalLabel">Editar Información</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -100,44 +111,89 @@
                         </div>
                         <div class="form-group">
                             <label for="editPerfil">Perfil Profesional</label>
-                            <textarea id="editPerfil" class="form-control"></textarea>
+                            <textarea id="editPerfil" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editExperiencia1">Experiencia 1</label>
+                            <textarea id="editExperiencia1" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editExperiencia2">Experiencia 2</label>
+                            <textarea id="editExperiencia2" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editExperiencia3">Experiencia 3</label>
+                            <textarea id="editExperiencia3" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editExperiencia4">Experiencia 4</label>
+                            <textarea id="editExperiencia4" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editEducacion">Educación</label>
+                            <textarea id="editEducacion" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editHabilidades">Habilidades</label>
+                            <textarea id="editHabilidades" class="form-control" rows="2"></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" id="saveChanges">Guardar Cambios</button>
+                    <button type="button" id="saveChanges" class="btn btn-primary">Guardar Cambios</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        document.getElementById('saveChanges').addEventListener('click', function () {
-            const nombre = document.getElementById('editNombre').value;
-            const email = document.getElementById('editEmail').value;
-            const telefono = document.getElementById('editTelefono').value;
-            const ubicacion = document.getElementById('editUbicacion').value;
-            const perfil = document.getElementById('editPerfil').value;
-
-            document.getElementById('nombre').textContent = nombre;
-            document.getElementById('email').textContent = email;
-            document.getElementById('telefono').textContent = telefono;
-            document.getElementById('ubicacion').textContent = ubicacion;
-            document.getElementById('perfil').textContent = perfil;
-
-            $('#editModal').modal('hide');
-        });
-
         $('#editModal').on('show.bs.modal', function () {
             document.getElementById('editNombre').value = document.getElementById('nombre').textContent;
             document.getElementById('editEmail').value = document.getElementById('email').textContent;
             document.getElementById('editTelefono').value = document.getElementById('telefono').textContent;
             document.getElementById('editUbicacion').value = document.getElementById('ubicacion').textContent;
             document.getElementById('editPerfil').value = document.getElementById('perfil').textContent;
+            const experiencia = document.getElementById('experiencia').children;
+            document.getElementById('editExperiencia1').value = experiencia[0]?.textContent || '';
+            document.getElementById('editExperiencia2').value = experiencia[1]?.textContent || '';
+            document.getElementById('editExperiencia3').value = experiencia[2]?.textContent || '';
+            document.getElementById('editExperiencia4').value = experiencia[3]?.textContent || '';
+            document.getElementById('editEducacion').value = document.getElementById('educacion').textContent;
+            document.getElementById('editHabilidades').value = document.getElementById('habilidades').textContent;
+        });
+
+        document.getElementById('saveChanges').addEventListener('click', function() {
+            const nombre = document.getElementById('editNombre').value;
+            const email = document.getElementById('editEmail').value;
+            const telefono = document.getElementById('editTelefono').value;
+            const ubicacion = document.getElementById('editUbicacion').value;
+            const perfil = document.getElementById('editPerfil').value;
+            const experiencia1 = document.getElementById('editExperiencia1').value;
+            const experiencia2 = document.getElementById('editExperiencia2').value;
+            const experiencia3 = document.getElementById('editExperiencia3').value;
+            const experiencia4 = document.getElementById('editExperiencia4').value;
+            const educacion = document.getElementById('editEducacion').value;
+            const habilidades = document.getElementById('editHabilidades').value;
+
+            document.getElementById('nombre').textContent = nombre;
+            document.getElementById('email').textContent = email;
+            document.getElementById('telefono').textContent = telefono;
+            document.getElementById('ubicacion').textContent = ubicacion;
+            document.getElementById('perfil').textContent = perfil;
+            document.getElementById('experiencia').innerHTML = `
+                <li><strong>${experiencia1}</strong></li>
+                <li><strong>${experiencia2}</strong></li>
+                <li><strong>${experiencia3}</strong></li>
+                <li><strong>${experiencia4}</strong></li>
+            `;
+            document.getElementById('educacion').textContent = educacion;
+            document.getElementById('habilidades').textContent = habilidades;
+
+            $('#editModal').modal('hide');
         });
     </script>
 </body>
