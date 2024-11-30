@@ -1,6 +1,6 @@
 import express from 'express'
 import { PORT } from './src/config/config.js' 
-import { userRepository, chatRepository,Internship, Curriculum, curriculumRepository } from './src/repository/user-repository.js'
+import { userRepository, chatRepository,Internship, Curriculum, curriculumRepository, internshipRepository } from './src/repository/user-repository.js'
 import path from 'path';
 import { Server } from 'socket.io'
 import { createServer } from 'node:http';
@@ -169,7 +169,6 @@ app.post('/saveInternship', async (req, res) => {
         console.error('Error al guardar la pasantía:', error);
     }
 });
-// Ruta GET para obtener el currículum
 app.get('/curriculum1', async (req, res) => {
     try {
         const curriculum = await curriculumRepository.getCurriculum();
@@ -180,12 +179,11 @@ app.get('/curriculum1', async (req, res) => {
     }
 });
 
-// Ruta POST para guardar o actualizar el currículum
 app.put('/curriculum', async (req, res) => {
     try {
-        const updatedCurriculum = req.body; // Recibe los datos actualizados del cuerpo de la solicitud
+        const updatedCurriculum = req.body; 
         const result = await curriculumRepository.saveCurriculum(updatedCurriculum);
-        res.status(200).json(result); // Devuelve el currículum actualizado
+        res.status(200).json(result); 
     } catch (error) {
         console.error('Error actualizando el currículum:', error);
         res.status(500).send('Error actualizando el currículum');
@@ -198,6 +196,19 @@ app.get('/internships', async (req, res) => {
     } catch (error) {
         console.error('Error al obtener pasantías:', error);
         res.status(500).send('Error al obtener pasantías.');
+    }
+});
+
+app.delete('/deleteInternship/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log(id)
+    try {
+        await internshipRepository.deleteInternship(id);
+
+        res.status(200).send({ message: 'Pasantía eliminada correctamente' });
+    } catch (error) {
+        console.error('Error al eliminar la pasantía:', error);
+        res.status(500).send('Error al eliminar la pasantía.');
     }
 });
 

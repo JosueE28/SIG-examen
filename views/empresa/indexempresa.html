@@ -70,6 +70,10 @@
             font-weight: bold;
             color: #000000;
         }
+
+        .icon-size {
+            font-size: 1.5rem; 
+        }
     </style>
 </head>
 <body>
@@ -87,13 +91,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/indexempresa">Inicio</a>
+                        <a class="nav-link" href="/indexempresa">
+                            <span class="bi bi-house-door icon-size"></span> Inicio
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/chat2">Chat</a>
+                        <a class="nav-link" href="/chat2">
+                            <span class="bi bi-chat-dots icon-size"></span> Chat
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">Cerrar Sesión</a>
+                        <a class="nav-link" href="/login">
+                            <span class="bi bi-box-arrow-right icon-size"></span> Cerrar Sesión
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -184,43 +194,70 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        async function loadInternships() {
-            try {
-                const response = await fetch('/internships');
-                const internships = await response.json();
+        async function deleteInternship(id) {
+    try {
+        console.log(id);
+        const response = await fetch(`/deleteInternship/${id}`, {
+            method: 'DELETE'
+        });
 
-                const listContainer = document.getElementById('internshipList');
-                listContainer.innerHTML = '';
-
-                if (internships.length === 0) {
-                    listContainer.innerHTML = '<p class="text-center">No hay pasantías creadas aún.</p>';
-                    return;
-                }
-
-                internships.forEach((internship) => {
-                    const internshipCard = `
-                        <div class="internship-card">
-                            <h5 class="internship-title">${internship.title}</h5>
-                            <p>
-                                <strong>Empresa:</strong> ${internship.company}<br>
-                                <strong>Ubicación:</strong> ${internship.location}<br>
-                                <strong>Duración:</strong> ${internship.duration}<br>
-                                <strong>Descripción:</strong> ${internship.description}<br>
-                                <strong>Requisitos:</strong> ${internship.requirements}<br>
-                                <strong>Beneficios:</strong> ${internship.benefits}<br>
-                                <strong>Aplicar en:</strong> <a href="${internship.applyLink}" target="_blank">${internship.applyLink}</a><br>
-                            </p>
-                            <button class="btn btn-primary btn-sm" onclick="editInternship('${internship._id}', '${internship.title}', '${internship.company}', '${internship.location}', '${internship.duration}', '${internship.description}', '${internship.requirements}', '${internship.benefits}', '${internship.applyLink}')">
-                                Editar
-                            </button>
-                        </div>`;
-                    listContainer.innerHTML += internshipCard;
-                });
-            } catch (error) {
-                console.error('Error al cargar las pasantías:', error);
-                document.getElementById('internshipList').innerHTML = '<p class="text-danger">Error al cargar las pasantías.</p>';
+        if (response.ok) {
+            const internshipCard = document.getElementById(`internship-${id}`);
+            if (internshipCard) {
+                internshipCard.remove();  
             }
+
+            Swal.fire('¡Eliminado!', 'La pasantía ha sido eliminada correctamente', 'success');
+        } else {
+            const error = await response.text();
+            console.error('Error del servidor:', error);
+            Swal.fire('Error', 'No se pudo eliminar la pasantía', 'error');
         }
+    } catch (error) {
+        console.error('Error al eliminar pasantía:', error);
+        Swal.fire('Error', 'Hubo un problema al eliminar la pasantía', 'error');
+    }
+}
+    async function loadInternships() {
+        try {
+            const response = await fetch('/internships');
+            const internships = await response.json();
+
+            const listContainer = document.getElementById('internshipList');
+            listContainer.innerHTML = '';
+
+            if (internships.length === 0) {
+                listContainer.innerHTML = '<p class="text-center">No hay pasantías creadas aún.</p>';
+                return;
+            }
+
+            internships.forEach((internship) => {
+                const internshipCard = `
+                    <div class="internship-card" id="internship-${internship._id}">
+                        <h5 class="internship-title">${internship.title}</h5>
+                        <p>
+                            <strong>Empresa:</strong> ${internship.company}<br>
+                            <strong>Ubicación:</strong> ${internship.location}<br>
+                            <strong>Duración:</strong> ${internship.duration}<br>
+                            <strong>Descripción:</strong> ${internship.description}<br>
+                            <strong>Requisitos:</strong> ${internship.requirements}<br>
+                            <strong>Beneficios:</strong> ${internship.benefits}<br>
+                            <strong>Aplicar en:</strong> <a href="${internship.applyLink}" target="_blank">${internship.applyLink}</a><br>
+                        </p>
+                        <button class="btn btn-primary btn-sm" onclick="editInternship('${internship._id}', '${internship.title}', '${internship.company}', '${internship.location}', '${internship.duration}', '${internship.description}', '${internship.requirements}', '${internship.benefits}', '${internship.applyLink}')">
+                            Editar
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteInternship('${internship._id}')">
+                            Terminar Oferta
+                        </button>
+                    </div>`;
+                listContainer.innerHTML += internshipCard;
+            });
+        } catch (error) {
+            console.error('Error al cargar las pasantías:', error);
+            document.getElementById('internshipList').innerHTML = '<p class="text-danger">Error al cargar las pasantías.</p>';
+        }
+    }
 
         function editInternship(id, title, company, location, duration, description, requirements, benefits, applyLink) {
             window.currentInternshipId = id;

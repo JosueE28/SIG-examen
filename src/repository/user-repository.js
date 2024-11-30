@@ -73,6 +73,42 @@ const Internship = Schema('Internship', {
     applyLink: { type: String },
 });
 
+import fs from 'fs';
+import path from 'path';
+
+// Ruta al archivo que contiene las pasantías
+const dbPath = path.join('src', 'models', 'db', 'Internship.json');
+export class internshipRepository {
+    static async deleteInternship(id) {
+        try {
+            // Leer el archivo JSON existente
+            const rawData = fs.readFileSync(dbPath, 'utf-8');
+            const allInternships = JSON.parse(rawData); // Asegúrate de que esto sea un arreglo
+
+            // Verificar si el arreglo de pasantías está vacío o no
+            if (!Array.isArray(allInternships)) {
+                throw new Error('No se encontraron pasantías.');
+            }
+
+            const internshipIndex = allInternships.findIndex(item => item._id === id);
+            if (internshipIndex === -1) {
+                throw new Error('No se encontró la pasantía con el ID especificado');
+            }
+
+            // Eliminar la pasantía del arreglo
+            allInternships.splice(internshipIndex, 1);
+
+            // Sobrescribir el archivo con el arreglo actualizado
+            fs.writeFileSync(dbPath, JSON.stringify(allInternships, null, 2));
+
+            console.log(`Pasantía con ID ${id} eliminada correctamente.`);
+        } catch (error) {
+            console.error('Error al eliminar la pasantía:', error.message);
+            throw new Error(error.message);
+        }
+    }
+}
+
 export class chatRepository {
     static async saveMessage({ username, message }) {
         const msg = ChatMessage.create({
@@ -133,12 +169,10 @@ export class curriculumRepository {
     
             console.log('Datos a actualizar:', data);
     
-            // Buscar el currículum existente por nombre
             const existingCurriculum = await Curriculum.findOne({ name });
             console.log('Currículum existente:', existingCurriculum);
     
             if (existingCurriculum) {
-                // Actualizar el currículum existente
                 existingCurriculum.email = email || existingCurriculum.email;
                 existingCurriculum.telefono = telefono || existingCurriculum.telefono;
                 existingCurriculum.ubicacion = ubicacion || existingCurriculum.ubicacion;
@@ -151,7 +185,6 @@ export class curriculumRepository {
                 console.log('Currículum actualizado:', existingCurriculum);
                 return existingCurriculum;
             } else {
-                // Si no existe, devolver un error
                 throw new Error(`No se encontró un currículum con el nombre: ${name}`);
             }
         } catch (error) {
